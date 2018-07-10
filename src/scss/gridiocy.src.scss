@@ -1,1 +1,13 @@
 @import 'gridiocy.variables.scss';
+
+.gridiocy-grid {
+    display: grid;
+    //grid-template-columns: 1fr 1fr 1fr;
+    //grid-template-rows: 1fr 1fr 1fr;
+}
+
+.gridiocy-item {
+    background-color: #333;
+    margin: 10px;
+    min-height: 200px;
+}
