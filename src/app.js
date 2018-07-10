@@ -1,5 +1,5 @@
 // js
-import './js/gridiocy-src.js';
+import './js/gridiocy.src.js';
 
 // scss
-import './scss/gridiocy-src.scss';
+import './scss/gridiocy.src.scss';
