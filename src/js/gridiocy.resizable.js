@@ -56,23 +56,32 @@ function finishResize(e) {
 }
 function isContentLargerThanContainer(contentBlock) {
 
-    // Width
-    let exceedsWidth = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
-    let smallerWidthThan = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
+    // Width. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
+    const exceedsWidth = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
+    const smallerWidthThan = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
 
-    contentBlock.parentElement.dataset.columnSpan = exceedsWidth ? Number(contentBlock.parentElement.dataset.columnSpan) + 1 : contentBlock.parentElement.dataset.columnSpan;
-    contentBlock.parentElement.dataset.columnSpan = smallerWidthThan ? Number(contentBlock.parentElement.dataset.columnSpan) - 1 : contentBlock.parentElement.dataset.columnSpan;
-
+    // Set modifier.
+    contentBlock.parentElement.dataset.columnSpan = Number(contentBlock.parentElement.dataset.columnSpan) + getSpanModifier(exceedsWidth, smallerWidthThan);
     contentBlock.parentElement.style.gridColumn = `auto / span ${contentBlock.parentElement.dataset.columnSpan}`;
 
-    // Height
-    let exceedsHeight = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) + 0.5)) < contentBlock.offsetHeight;
-    let smallerHeightThan = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) - 0.5)) > contentBlock.offsetHeight;
+    // Height. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
+    const exceedsHeight = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) + 0.5)) < contentBlock.offsetHeight;
+    const smallerHeightThan = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) - 0.5)) > contentBlock.offsetHeight;
 
-    contentBlock.parentElement.dataset.rowSpan = exceedsHeight ? Number(contentBlock.parentElement.dataset.rowSpan) + 1 : contentBlock.parentElement.dataset.rowSpan;
-    contentBlock.parentElement.dataset.rowSpan = smallerHeightThan ? Number(contentBlock.parentElement.dataset.rowSpan) - 1 : contentBlock.parentElement.dataset.rowSpan;
-
+    // Set modifier.
+    contentBlock.parentElement.dataset.rowSpan =  Number(contentBlock.parentElement.dataset.rowSpan) + getSpanModifier(exceedsHeight, smallerHeightThan);
     contentBlock.parentElement.style.gridRow = `auto / span ${contentBlock.parentElement.dataset.rowSpan}`;
+}
+
+/**
+ * Determines the modifier for column or row span.
+ *
+ * @param {boolean} exceeds resized box is bigger than grid-item by a threshold of 50%
+ * @param {boolean} smaller resized box is small than grid-item by a threshold of 50%
+ * @returns 1, -1, or 0
+ */
+function getSpanModifier(exceeds, smaller) {
+    return exceeds ? 1 : (smaller ? -1 : 0);
 }
 
 export default resizable;
