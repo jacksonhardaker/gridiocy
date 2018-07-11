@@ -11,11 +11,11 @@ let thresholdWidth;
 let gridiocyGrid;
 
 draggable.init = function (handle, columns) {
-    handle.addEventListener('mousedown', __initResize, false);
+    handle.addEventListener('mousedown', initResize, false);
     maxColumns = columns;
 };
 
-function __initResize(e) {
+function initResize(e) {
     contentBlock = e.target.parentElement;
     gridiocyGrid = contentBlock.parentElement.parentElement;
     thresholdWidth = gridiocyGrid.offsetWidth / maxColumns;
@@ -30,28 +30,28 @@ function __initResize(e) {
 
     contentBlock.style.zIndex = 999;
 
-    window.addEventListener('mousemove', __resizeGridItem, false);
-    window.addEventListener('mouseup', __finishResize, false);
+    window.addEventListener('mousemove', resizeGridItem, false);
+    window.addEventListener('mouseup', finishResize, false);
 }
 
-function __resizeGridItem(e) {
+function resizeGridItem(e) {
     contentBlock.style.width = `${startWidth - (startX - e.clientX)}px`;
     contentBlock.style.height = `${startHeight - (startY - e.clientY)}px`;
 
-    __isContentLargerThanContainer(contentBlock);
+    isContentLargerThanContainer(contentBlock);
 }
 
-function __finishResize(e) {
+function finishResize(e) {
 
-    window.removeEventListener('mousemove', __resizeGridItem, false);
-    window.removeEventListener('mouseup', __finishResize, false);
+    window.removeEventListener('mousemove', resizeGridItem, false);
+    window.removeEventListener('mouseup', finishResize, false);
 
     gridiocyGrid.style.gridTemplateRows = 'auto';
     contentBlock.style.zIndex = 1;
     resizeToFit(contentBlock);
 
 }
-function __isContentLargerThanContainer(contentBlock) {
+function isContentLargerThanContainer(contentBlock) {
 
     // Width
     let exceedsWidth = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
