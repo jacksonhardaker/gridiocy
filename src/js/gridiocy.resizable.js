@@ -20,8 +20,8 @@ function initResize(e) {
     gridiocyGrid = contentBlock.parentElement.parentElement;
     thresholdWidth = gridiocyGrid.offsetWidth / maxColumns;
 
+    // Expand grid rows to enable resizing beyond current size
     gridiocyGrid.style.gridTemplateRows = new Array(50).fill("1fr").join(' ');
-    //grid-template-rows: ${ new Array(50).fill("1fr").join(' ')};
 
     startX = e.clientX;
     startY = e.clientY;
@@ -29,6 +29,9 @@ function initResize(e) {
     startHeight = contentBlock.offsetHeight;
 
     contentBlock.style.zIndex = 999;
+
+    //contentBlock.style.width = `${contentBlock.parentElement.offsetWidth}px`;
+    //contentBlock.style.height = `${contentBlock.parentElement.offsetHeight}px`;
 
     window.addEventListener('mousemove', resizeGridItem, false);
     window.addEventListener('mouseup', finishResize, false);
@@ -46,7 +49,7 @@ function finishResize(e) {
     window.removeEventListener('mousemove', resizeGridItem, false);
     window.removeEventListener('mouseup', finishResize, false);
 
-    gridiocyGrid.style.gridTemplateRows = 'auto';
+    gridiocyGrid.style.gridTemplateRows = 'none';
     contentBlock.style.zIndex = 1;
     resizeToFit(contentBlock);
 
