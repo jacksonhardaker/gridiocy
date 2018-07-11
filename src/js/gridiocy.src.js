@@ -1,4 +1,5 @@
 import resizable from './gridiocy.resizable.js';
+import draggable from './gridiocy.resizable.js';
 const gridiocy = {};
 
 gridiocy.initialize = function (indentifier, columns, options) {
