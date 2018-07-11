@@ -10,17 +10,29 @@ let maxColumns;
 let thresholdWidth;
 let gridiocyGrid;
 
+
+/**
+ * Initialize resizability
+ *
+ * @param {Element} handle HTML Element to attach events to
+ * @param {Number} columns Number of columns in grid
+ */
 resizable.init = function (handle, columns) {
-    handle.addEventListener('mousedown', initResize, false);
+    handle.addEventListener('mousedown', beginResize, false);
     maxColumns = columns;
 };
 
-function initResize(e) {
+/**
+ *Begin resizing, set initial variables.
+ *
+ * @param {Event} e
+ */
+function beginResize(e) {
     contentBlock = e.target.parentElement;
     gridiocyGrid = contentBlock.parentElement.parentElement;
     thresholdWidth = gridiocyGrid.offsetWidth / maxColumns;
 
-    // Expand grid rows to enable resizing beyond current size
+    // Expand grid rows to enable resizing beyond current size.
     gridiocyGrid.style.gridTemplateRows = new Array(50).fill("1fr").join(' ');
 
     startX = e.clientX;
@@ -28,49 +40,66 @@ function initResize(e) {
     startWidth = contentBlock.offsetWidth;
     startHeight = contentBlock.offsetHeight;
 
+    // Resizing content should be on top.
     contentBlock.style.zIndex = 999;
 
-    //contentBlock.style.width = `${contentBlock.parentElement.offsetWidth}px`;
-    //contentBlock.style.height = `${contentBlock.parentElement.offsetHeight}px`;
-
+    // Attach event listeners.
     window.addEventListener('mousemove', resizeGridItem, false);
     window.addEventListener('mouseup', finishResize, false);
 }
 
+/**
+ * Actively resize content block when dragging.
+ *
+ * @param {Event} e
+ */
 function resizeGridItem(e) {
     contentBlock.style.width = `${startWidth - (startX - e.clientX)}px`;
     contentBlock.style.height = `${startHeight - (startY - e.clientY)}px`;
 
-    isContentLargerThanContainer(contentBlock);
+    // Determine if grid item needs to change its number of rows/columns spanned.
+    isContentLargerThanContainer();
 }
 
-function finishResize(e) {
+/**
+ * Finish resizing.
+ *
+ */
+function finishResize() {
 
+    // Remove event listeners.
     window.removeEventListener('mousemove', resizeGridItem, false);
     window.removeEventListener('mouseup', finishResize, false);
 
+    // Reset styles.
     gridiocyGrid.style.gridTemplateRows = 'none';
     contentBlock.style.zIndex = 1;
     resizeToFit(contentBlock);
 
 }
-function isContentLargerThanContainer(contentBlock) {
+
+/**
+ * Determines whether grid item needs to alter column/row span, and executes change.
+ *
+ */
+function isContentLargerThanContainer() {
+    let gridItem = contentBlock.parentElement;
 
     // Width. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
-    const exceedsWidth = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
-    const smallerWidthThan = (thresholdWidth * (Number(contentBlock.parentElement.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
+    const exceedsWidth = (thresholdWidth * (Number(gridItem.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
+    const smallerWidthThan = (thresholdWidth * (Number(gridItem.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
 
     // Set modifier.
-    contentBlock.parentElement.dataset.columnSpan = Number(contentBlock.parentElement.dataset.columnSpan) + getSpanModifier(exceedsWidth, smallerWidthThan);
-    contentBlock.parentElement.style.gridColumn = `auto / span ${contentBlock.parentElement.dataset.columnSpan}`;
+    gridItem.dataset.columnSpan = Number(gridItem.dataset.columnSpan) + getSpanModifier(exceedsWidth, smallerWidthThan);
+    gridItem.style.gridColumn = `auto / span ${gridItem.dataset.columnSpan}`;
 
     // Height. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
-    const exceedsHeight = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) + 0.5)) < contentBlock.offsetHeight;
-    const smallerHeightThan = (200 * (Number(contentBlock.parentElement.dataset.rowSpan) - 0.5)) > contentBlock.offsetHeight;
+    const exceedsHeight = (200 * (Number(gridItem.dataset.rowSpan) + 0.5)) < contentBlock.offsetHeight;
+    const smallerHeightThan = (200 * (Number(gridItem.dataset.rowSpan) - 0.5)) > contentBlock.offsetHeight;
 
     // Set modifier.
-    contentBlock.parentElement.dataset.rowSpan =  Number(contentBlock.parentElement.dataset.rowSpan) + getSpanModifier(exceedsHeight, smallerHeightThan);
-    contentBlock.parentElement.style.gridRow = `auto / span ${contentBlock.parentElement.dataset.rowSpan}`;
+    gridItem.dataset.rowSpan =  Number(gridItem.dataset.rowSpan) + getSpanModifier(exceedsHeight, smallerHeightThan);
+    gridItem.style.gridRow = `auto / span ${gridItem.dataset.rowSpan}`;
 }
 
 /**
