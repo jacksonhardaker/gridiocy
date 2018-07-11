@@ -1,4 +1,4 @@
-import { resizeToFit } from './gridiocy.src.js';
+import { resizeToFit, getColumnWidth } from './gridiocy.src.js';
 const resizable = {};
 
 let startX;
@@ -6,8 +6,6 @@ let startY;
 let startWidth;
 let startHeight;
 let contentBlock;
-let maxColumns;
-let thresholdWidth;
 let gridiocyGrid;
 
 
@@ -15,11 +13,19 @@ let gridiocyGrid;
  * Initialize resizability
  *
  * @param {Element} handle HTML Element to attach events to
- * @param {Number} columns Number of columns in grid
  */
-resizable.init = function (handle, columns) {
-    handle.addEventListener('mousedown', beginResize, false);
-    maxColumns = columns;
+resizable.init = function (item) {
+
+    // Add class.
+    item.classList.add('gridiocy-item-content-resizable');
+
+    // Create handle element and append.
+    const resizeHandle = document.createElement('div');
+    resizeHandle.classList.add('gridiocy-item-resizable-handle');
+    item.appendChild(resizeHandle);
+
+    // Attach event listener.
+    resizeHandle.addEventListener('mousedown', beginResize, false);
 };
 
 /**
@@ -30,7 +36,6 @@ resizable.init = function (handle, columns) {
 function beginResize(e) {
     contentBlock = e.target.parentElement;
     gridiocyGrid = contentBlock.parentElement.parentElement;
-    thresholdWidth = gridiocyGrid.offsetWidth / maxColumns;
 
     // Expand grid rows to enable resizing beyond current size.
     gridiocyGrid.style.gridTemplateRows = new Array(50).fill("1fr").join(' ');
@@ -59,6 +64,8 @@ function resizeGridItem(e) {
 
     // Determine if grid item needs to change its number of rows/columns spanned.
     isContentLargerThanContainer();
+
+    e.preventDefault();
 }
 
 /**
@@ -86,8 +93,8 @@ function isContentLargerThanContainer() {
     let gridItem = contentBlock.parentElement;
 
     // Width. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
-    const exceedsWidth = (thresholdWidth * (Number(gridItem.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
-    const smallerWidthThan = (thresholdWidth * (Number(gridItem.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
+    const exceedsWidth = (getColumnWidth() * (Number(gridItem.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
+    const smallerWidthThan = (getColumnWidth() * (Number(gridItem.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
 
     // Set modifier.
     gridItem.dataset.columnSpan = Number(gridItem.dataset.columnSpan) + getSpanModifier(exceedsWidth, smallerWidthThan);

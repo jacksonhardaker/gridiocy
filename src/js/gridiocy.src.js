@@ -1,13 +1,19 @@
 import resizable from './gridiocy.resizable.js';
-import draggable from './gridiocy.resizable.js';
+import draggable from './gridiocy.draggable.js';
 const gridiocy = {};
 
-gridiocy.initialize = function (indentifier, columns, options) {
+let options;
+let gridiocyGrid;
+
+gridiocy.initialize = function (indentifier, opt) {
+
+    // Save settings.
+    options = opt;
 
     // Init grid class and style
-    const gridElement = document.querySelector(indentifier);
-    gridElement.classList.add('gridiocy-grid');
-    gridElement.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    gridiocyGrid = document.querySelector(indentifier);
+    gridiocyGrid.classList.add('gridiocy-grid');
+    gridiocyGrid.style.gridTemplateColumns = `repeat(${options.columns}, 1fr)`;
 
     // Wrap content
     Array.from(document.getElementsByClassName('gridiocy-item')).forEach(item => {
@@ -24,13 +30,15 @@ gridiocy.initialize = function (indentifier, columns, options) {
     // If resizable
     if (options.resizable) {
         Array.from(document.getElementsByClassName('gridiocy-item-content')).forEach(item => {
-            item.classList.add('gridiocy-item-content-resizable');
+            
 
-            // Create handle element and append
-            const resizeHandle = document.createElement('div');
-            resizeHandle.classList.add('gridiocy-item-resizable-handle');
-            resizable.init(resizeHandle, columns);
-            item.appendChild(resizeHandle);
+            resizable.init(item, options.columns);
+        });
+    }
+
+    if (options.draggable) {
+        Array.from(document.getElementsByClassName('gridiocy-item-content')).forEach(item => {
+            draggable.init(item, options.columns);
         });
     }
 }
@@ -40,4 +48,12 @@ function resizeToFit(contentBlock) {
     contentBlock.style.height = '100%';
 }
 
-export { gridiocy, resizeToFit };
+function getColumnsCount() {
+    return options.columns;
+}
+
+function getColumnWidth() {
+    return gridiocyGrid.offsetWidth / getColumnsCount();
+}
+
+export { gridiocy, resizeToFit, getColumnsCount, getColumnWidth };
