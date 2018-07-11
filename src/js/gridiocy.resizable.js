@@ -1,5 +1,5 @@
 import { resizeToFit } from './gridiocy.src.js';
-const draggable = {};
+const resizable = {};
 
 let startX;
 let startY;
@@ -10,7 +10,7 @@ let maxColumns;
 let thresholdWidth;
 let gridiocyGrid;
 
-draggable.init = function (handle, columns) {
+resizable.init = function (handle, columns) {
     handle.addEventListener('mousedown', initResize, false);
     maxColumns = columns;
 };
@@ -72,4 +72,4 @@ function isContentLargerThanContainer(contentBlock) {
     contentBlock.parentElement.style.gridRow = `auto / span ${contentBlock.parentElement.dataset.rowSpan}`;
 }
 
-export default draggable;
+export default resizable;
