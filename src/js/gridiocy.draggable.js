@@ -22,17 +22,19 @@ draggable.init = function (handle) {
 };
 
 function beginDrag(e) {
-    dragHandle = findParentHandle(e.target);
-    inMotion = true;
-    startX = e.clientX;
-    startY = e.clientY;
+    if (!Array.from(e.target.classList).find(identifier => 'gridiocy-item-resizable-handle')) {
+        dragHandle = findParentHandle(e.target);
+        inMotion = true;
+        startX = e.clientX;
+        startY = e.clientY;
 
-    // Resizing content should be on top.
-    dragHandle.style.zIndex = 999;
+        // Resizing content should be on top.
+        dragHandle.style.zIndex = 999;
 
-    // Attach event listeners.
-    window.addEventListener('mousemove', dragObject, false);
-    window.addEventListener('mouseup', finishDrag, false);
+        // Attach event listeners.
+        window.addEventListener('mousemove', dragObject, false);
+        window.addEventListener('mouseup', finishDrag, false);
+    }
 }
 
 function dragObject(e) {
@@ -62,7 +64,7 @@ function finishDrag() {
 }
 
 function handleMove(moveUp, moveRight, moveDown, moveLeft) {
-    
+
 }
 
 /**
