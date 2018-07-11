@@ -1,5 +1,6 @@
 .gridiocy-grid {
   display: grid;
+  grid-auto-rows: 1fr;
 }
 
 .gridiocy-item {
