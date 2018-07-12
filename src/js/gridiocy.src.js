@@ -34,7 +34,8 @@ gridiocy.initialize = function (indentifier, opt) {
         let columnPos = index % options.columns + 1;
         let rowPos = Math.ceil((index + 1) / options.columns);
 
-        item.style.gridArea = `${rowPos} / ${columnPos} / span 1 / span 1`;
+        //item.style.gridArea = `${rowPos} / ${columnPos} / span 1 / span 1`;
+        item.style.gridArea = 'auto / auto / span 1/ span 1';
         setAttributes(item, { 'data-grid-id': indentifier, 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
 
         // Initiate virtual grid.

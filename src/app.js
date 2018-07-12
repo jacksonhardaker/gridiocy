@@ -11,4 +11,4 @@ import '../node_modules/uniqid/index.js';
 // scss
 import './scss/gridiocy.src.scss';
 
-gridiocy.initialize('.gridiocy', { columns: 3, resizable: false, draggable: true });
+gridiocy.initialize('.gridiocy', { columns: 3, resizable: true, draggable: false });
