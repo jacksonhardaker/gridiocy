@@ -87,8 +87,10 @@ function handleMove(e, moveUp, moveRight, moveDown, moveLeft) {
     }
 
     // Any changes?
-    if (moveRight || moveLeft || moveDown || moveUp) {
+    if (moveRight || moveLeft) {
         startX = e.clientX;
+    }
+    else if (moveDown || moveUp) {
         startY = e.clientY;
     }
 }
