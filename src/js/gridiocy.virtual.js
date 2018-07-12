@@ -3,11 +3,22 @@ const virtualGrid = {};
 
 let list = [];
 
-virtualGrid.add = function (obj) {
-    list.push(obj);
+/**
+ * Adds an object to the list
+ *
+ * @param {*} obj
+ */
+virtualGrid.add = function (id, row, column, rowSpan, columnSpan) {
+    list.push({
+        id,
+        row,
+        column,
+        rowSpan,
+        columnSpan
+    });
 }
 
-virtualGrid.sort = function () {
+virtualGrid.rowMajorSort = function () {
     list.sort((a,b) => {
          let aOrder = calculateRowMajorOrder(a);
          let bOrder = calculateRowMajorOrder(b);
