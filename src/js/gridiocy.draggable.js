@@ -1,4 +1,4 @@
-import { resizeToFit, getColumnsCount, getColumnWidth } from './gridiocy.src.js';
+import { resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning } from './gridiocy.src.js';
 const draggable = {};
 
 let startX = 0;
@@ -23,6 +23,7 @@ draggable.init = function (handle) {
 
 function beginDrag(e) {
     if (!Array.from(e.target.classList).find(identifier => 'gridiocy-item-resizable-handle')) {
+        toggleAutoPositioning();
         dragHandle = findParentHandle(e.target);
         inMotion = true;
         startX = e.clientX;
@@ -60,11 +61,32 @@ function finishDrag() {
 
     // Reset styles and flags
     dragHandle.style.zIndex = 1;
+    dragHandle.style.transform = 'none';
     inMotion = false;
 }
 
 function handleMove(moveUp, moveRight, moveDown, moveLeft) {
+    const gridItem = dragHandle.parentElement;
 
+    if (moveRight) {
+        gridItem.dataset.columnPosition = Number(gridItem.dataset.columnPosition) + 1;
+        gridItem.style.gridColumn = `${gridItem.dataset.columnPosition} / span ${gridItem.dataset.columnSpan}`;
+    }
+
+    if (moveLeft) {
+        gridItem.dataset.columnPosition = Number(gridItem.dataset.columnPosition) - 1;
+        gridItem.style.gridColumn = `${gridItem.dataset.columnPosition} / span ${gridItem.dataset.columnSpan}`;
+    }
+
+    if (moveDown) {
+        gridItem.dataset.rowPosition = Number(gridItem.dataset.rowPosition) + 1;
+    }
+
+    if (moveUp) {
+        gridItem.dataset.rowPosition = Number(gridItem.dataset.rowPosition) - 1;
+    }
+
+    gridItem.style.gridArea = `${gridItem.dataset.rowPosition} / ${gridItem.dataset.columnPosition} / span ${gridItem.dataset.rowSpan} / span ${gridItem.dataset.columnSpan}`;
 }
 
 /**

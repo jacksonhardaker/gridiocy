@@ -1,5 +1,6 @@
 import resizable from './gridiocy.resizable.js';
 import draggable from './gridiocy.draggable.js';
+import { setAttributes } from './gridiocy.utils.js';
 const gridiocy = {};
 
 let options;
@@ -16,15 +17,17 @@ gridiocy.initialize = function (indentifier, opt) {
     gridiocyGrid.style.gridTemplateColumns = `repeat(${options.columns}, 1fr)`;
 
     // Wrap content
-    Array.from(document.getElementsByClassName('gridiocy-item')).forEach(item => {
+    Array.from(document.getElementsByClassName('gridiocy-item')).forEach((item, index) => {
 
         // Wrap inner HTML with content wrapper
         item.innerHTML = `<div class="gridiocy-item-content">${item.innerHTML}</div>`;
 
         // Add default styles and data attributes
-        item.style.gridArea = 'auto / auto / span 1 / span 1';
-        item.setAttribute('data-column-span', 1);
-        item.setAttribute('data-row-span', 1);
+        let columnPos = index % options.columns + 1 ;
+        let rowPos = Math.ceil((index + 1) / options.columns);
+
+        item.style.gridArea = `${ rowPos } / ${ columnPos } / span 1 / span 1`;
+        setAttributes(item, { 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
     });
 
     // If resizable
@@ -56,4 +59,11 @@ function getColumnWidth() {
     return gridiocyGrid.offsetWidth / getColumnsCount();
 }
 
-export { gridiocy, resizeToFit, getColumnsCount, getColumnWidth };
+function toggleAutoPositioning() {
+    Array.from(document.getElementsByClassName('gridiocy-item')).forEach((item, index) => {
+        item.style.gridArea = `auto / auto / span ${ item.dataset.rowSpan } / span ${ item.dataset.columnSpan }`;
+        //setAttributes(item, { 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
+    });
+}
+
+export { gridiocy, resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning };
