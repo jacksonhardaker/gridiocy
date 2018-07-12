@@ -1,4 +1,5 @@
-import { resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning } from './gridiocy.src.js';
+import { resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning, recalculateRowMajorOrder } from './gridiocy.src.js';
+import virtualGrid from './gridiocy.virtual.js';
 const draggable = {};
 
 let startX = 0;
@@ -69,24 +70,20 @@ function handleMove(moveUp, moveRight, moveDown, moveLeft) {
     const gridItem = dragHandle.parentElement;
 
     if (moveRight) {
-        gridItem.dataset.columnPosition = Number(gridItem.dataset.columnPosition) + 1;
-        gridItem.style.gridColumn = `${gridItem.dataset.columnPosition} / span ${gridItem.dataset.columnSpan}`;
+        virtualGrid.shiftRight(gridItem.dataset.gridId);
     }
 
     if (moveLeft) {
-        gridItem.dataset.columnPosition = Number(gridItem.dataset.columnPosition) - 1;
-        gridItem.style.gridColumn = `${gridItem.dataset.columnPosition} / span ${gridItem.dataset.columnSpan}`;
+        virtualGrid.shiftLeft(gridItem.dataset.gridId);
     }
 
     if (moveDown) {
-        gridItem.dataset.rowPosition = Number(gridItem.dataset.rowPosition) + 1;
+        virtualGrid.shiftUp(gridItem.dataset.gridId);
     }
 
     if (moveUp) {
-        gridItem.dataset.rowPosition = Number(gridItem.dataset.rowPosition) - 1;
+        virtualGrid.shiftDown(gridItem.dataset.gridId);
     }
-
-    gridItem.style.gridArea = `${gridItem.dataset.rowPosition} / ${gridItem.dataset.columnPosition} / span ${gridItem.dataset.rowSpan} / span ${gridItem.dataset.columnSpan}`;
 }
 
 /**
