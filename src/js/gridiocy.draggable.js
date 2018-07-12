@@ -1,4 +1,4 @@
-import { resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning, recalculateRowMajorOrder } from './gridiocy.src.js';
+import { resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning } from './gridiocy.src.js';
 import virtualGrid from './gridiocy.virtual.js';
 const draggable = {};
 
@@ -29,7 +29,6 @@ function beginDrag(e) {
         inMotion = true;
         startX = e.clientX;
         startY = e.clientY;
-        console.log(startX, startY);
 
         // Resizing content should be on top.
         dragHandle.style.zIndex = 999;
@@ -103,7 +102,7 @@ function handleMove(e, moveUp, moveRight, moveDown, moveLeft) {
  */
 function findParentHandle(target) {
 
-    if (Array.from(target.classList).find(identifier => 'gridiocy-item-content-draggable')) {
+    if (Array.from(target.classList).find(() => 'gridiocy-item-content-draggable')) {
         return target;
     }
     else {

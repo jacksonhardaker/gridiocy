@@ -8,11 +8,9 @@ let list = [];
  *
  * @param {*} obj
  */
-virtualGrid.add = function (id, row, column, rowSpan, columnSpan) {
+virtualGrid.add = function (id, rowSpan, columnSpan) {
     list.push({
         id,
-        row,
-        column,
         rowSpan,
         columnSpan
     });
@@ -23,11 +21,11 @@ virtualGrid.rowMajorSort = function () {
         let aOrder = calculateRowMajorOrder(a);
         let bOrder = calculateRowMajorOrder(b);
 
-        if (a < b) {
+        if (aOrder < bOrder) {
             return -1;
         }
 
-        if (a > b) {
+        if (aOrder > bOrder) {
             return 1;
         }
 

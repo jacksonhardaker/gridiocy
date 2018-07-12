@@ -30,19 +30,13 @@ gridiocy.initialize = function (indentifier, opt) {
         // Wrap inner HTML with content wrapper
         item.innerHTML = `<div class="gridiocy-item-content">${item.innerHTML}</div>`;
 
-        // Add default styles and data attributes
-        let columnPos = index % options.columns + 1;
-        let rowPos = Math.ceil((index + 1) / options.columns);
-
-        //item.style.gridArea = `${rowPos} / ${columnPos} / span 1 / span 1`;
         item.style.gridArea = 'auto / auto / span 1/ span 1';
-        setAttributes(item, { 'data-grid-id': indentifier, 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
+        item.style.order = index;
+        setAttributes(item, { 'data-grid-id': indentifier, 'data-column-span': 1, 'data-row-span': 1 });
 
         // Initiate virtual grid.
-        virtualGrid.add(indentifier, rowPos, columnPos, 1, 1);
+        virtualGrid.add(indentifier, 1, 1);
     });
-
-    recalculateRowMajorOrder();
 
     // If resizable
     if (options.resizable) {
@@ -79,11 +73,4 @@ function toggleAutoPositioning() {
     });
 }
 
-function recalculateRowMajorOrder() {
-    Array.from(document.getElementsByClassName('gridiocy-item')).forEach((item) => {
-        let zeroBasedRowPosition = Number(item.dataset.rowPosition) - 1;
-        item.style.order = (zeroBasedRowPosition * options.columns) + Number(item.dataset.columnPosition);
-    });
-}
-
-export { gridiocy, resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning, recalculateRowMajorOrder };
+export { gridiocy, resizeToFit, getColumnsCount, getColumnWidth, toggleAutoPositioning };
