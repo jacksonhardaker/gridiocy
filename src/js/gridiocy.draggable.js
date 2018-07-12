@@ -29,6 +29,7 @@ function beginDrag(e) {
         inMotion = true;
         startX = e.clientX;
         startY = e.clientY;
+        console.log(startX, startY);
 
         // Resizing content should be on top.
         dragHandle.style.zIndex = 999;
@@ -49,7 +50,7 @@ function dragObject(e) {
 
         dragHandle.style.transform = `translate(${e.clientX - startX}px, ${e.clientY - startY}px)`;
 
-        handleMove(moveUp, moveRight, moveDown, moveLeft)
+        handleMove(e, moveUp, moveRight, moveDown, moveLeft)
     }
 
     e.preventDefault();
@@ -66,7 +67,7 @@ function finishDrag() {
     inMotion = false;
 }
 
-function handleMove(moveUp, moveRight, moveDown, moveLeft) {
+function handleMove(e, moveUp, moveRight, moveDown, moveLeft) {
     const gridItem = dragHandle.parentElement;
 
     if (moveRight) {
@@ -83,6 +84,12 @@ function handleMove(moveUp, moveRight, moveDown, moveLeft) {
 
     if (moveUp) {
         virtualGrid.shiftDown(gridItem.dataset.gridId);
+    }
+
+    // Any changes?
+    if (moveRight || moveLeft || moveDown || moveUp) {
+        startX = e.clientX;
+        startY = e.clientY;
     }
 }
 
