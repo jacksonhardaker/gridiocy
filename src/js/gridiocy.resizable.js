@@ -1,4 +1,5 @@
 import { resizeToFit, getColumnWidth } from './gridiocy.src.js';
+import virtualGrid from './gridiocy.virtual.js';
 const resizable = {};
 
 let startX;
@@ -91,22 +92,22 @@ function finishResize() {
  */
 function isContentLargerThanContainer() {
     let gridItem = contentBlock.parentElement;
+    let gridObj = virtualGrid.get(gridItem.dataset.gridId);
+
 
     // Width. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
-    const exceedsWidth = (getColumnWidth() * (Number(gridItem.dataset.columnSpan) + 0.5)) < contentBlock.offsetWidth;
-    const smallerWidthThan = (getColumnWidth() * (Number(gridItem.dataset.columnSpan) - 0.5)) > contentBlock.offsetWidth;
+    const exceedsWidth = (getColumnWidth() * (Number(gridObj.columnSpan) + 0.5)) < contentBlock.offsetWidth;
+    const smallerWidthThan = (getColumnWidth() * (Number(gridObj.columnSpan) - 0.5)) > contentBlock.offsetWidth;
 
     // Set modifier.
-    gridItem.dataset.columnSpan = Number(gridItem.dataset.columnSpan) + getSpanModifier(exceedsWidth, smallerWidthThan);
-    gridItem.style.gridColumn = `auto / span ${gridItem.dataset.columnSpan}`;
+    gridItem.style.gridColumn = `auto / span ${virtualGrid.setColumnSpan(gridObj.id, gridObj.columnSpan + getSpanModifier(exceedsWidth, smallerWidthThan))}`;
 
     // Height. Check for resized box being + 50% bigger than current grid item, or - 50% smaller. Takes into account changing grid item span.
-    const exceedsHeight = (200 * (Number(gridItem.dataset.rowSpan) + 0.5)) < contentBlock.offsetHeight;
-    const smallerHeightThan = (200 * (Number(gridItem.dataset.rowSpan) - 0.5)) > contentBlock.offsetHeight;
+    const exceedsHeight = (200 * (Number(gridObj.rowSpan) + 0.5)) < contentBlock.offsetHeight;
+    const smallerHeightThan = (200 * (Number(gridObj.rowSpan) - 0.5)) > contentBlock.offsetHeight;
 
     // Set modifier.
-    gridItem.dataset.rowSpan =  Number(gridItem.dataset.rowSpan) + getSpanModifier(exceedsHeight, smallerHeightThan);
-    gridItem.style.gridRow = `auto / span ${gridItem.dataset.rowSpan}`;
+    gridItem.style.gridRow = `auto / span ${virtualGrid.setRowSpan(gridObj.id, gridObj.rowSpan + getSpanModifier(exceedsHeight, smallerHeightThan))}`;
 }
 
 /**

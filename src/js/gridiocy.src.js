@@ -69,7 +69,6 @@ function getColumnWidth() {
 function toggleAutoPositioning() {
     Array.from(document.getElementsByClassName('gridiocy-item')).forEach((item) => {
         item.style.gridArea = `auto / auto / span ${item.dataset.rowSpan} / span ${item.dataset.columnSpan}`;
-        //setAttributes(item, { 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
     });
 }
 

@@ -39,6 +39,28 @@ virtualGrid.getList = function () {
     return [...list.map(obj => { return Object.assign({}, obj); })];
 }
 
+virtualGrid.get = function (id) {
+    return Object.assign({}, list[indexOf(id)]);
+}
+
+virtualGrid.setRowSpan = function(id, span) {
+    let index = indexOf(id);
+
+    list[index].rowSpan = span;
+    renderChangedSpan(list[index]);
+
+    return span;
+}
+
+virtualGrid.setColumnSpan = function(id, span) {
+    let index = indexOf(id);
+
+    list[index].columnSpan = span;
+    renderChangedSpan(list[index]);
+
+    return span;
+}
+
 virtualGrid.shiftUp = function (id) {
 }
 
@@ -75,6 +97,24 @@ function renderChangedOrder() {
     list.forEach((obj, index) => {
         document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0].style.order = index;
     });
+}
+
+function renderChangedSpan(obj) {
+    let element = document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0];
+
+    element.dataset.columnSpan = obj.columnSpan;
+    element.dataset.rowSpan = obj.rowSpan;
+
+}
+
+virtualGrid.generateFilledByGrid = function () {
+    let filledByGrid = [];
+
+    return list.map(obj => obj.columnSpan * obj.rowSpan).reduce((x, current) => x + current);
+
+    //return list.reduce((obj, count) => {
+    //    return count + Number(obj.columnSpan) * Number(obj.rowSpan);
+    //}, 0);
 }
 
 /** Private Functions */
