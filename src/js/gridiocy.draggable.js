@@ -78,11 +78,11 @@ function handleMove(e, moveUp, moveRight, moveDown, moveLeft) {
     }
 
     if (moveDown) {
-        virtualGrid.shiftUp(gridItem.dataset.gridId);
+        virtualGrid.shiftDown(gridItem.dataset.gridId);
     }
 
     if (moveUp) {
-        virtualGrid.shiftDown(gridItem.dataset.gridId);
+        virtualGrid.shiftUp(gridItem.dataset.gridId);
     }
 
     // Any changes?

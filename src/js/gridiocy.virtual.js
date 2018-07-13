@@ -61,10 +61,21 @@ virtualGrid.setColumnSpan = function(id, span) {
     return span;
 }
 
-virtualGrid.shiftUp = function (id) {
+virtualGrid.shiftUp = function (id) {let index = indexOf(id);
+
+    if (index - 1 >= 0) {
+        move(index, index - 3);
+        renderChangedOrder();
+    }
 }
 
 virtualGrid.shiftDown = function (id) {
+    let index = indexOf(id);
+
+    if (index + 1 < list.length) {
+        move(index, index + 3);
+        renderChangedOrder();
+    }
 }
 
 virtualGrid.shiftRight = function (id) {
@@ -108,9 +119,9 @@ function renderChangedSpan(obj) {
 }
 
 virtualGrid.generateFilledByGrid = function () {
-    let filledByGrid = [];
+    let filledByGrid = new Array(list.map(obj => obj.columnSpan * obj.rowSpan).reduce((x, current) => x + current));
 
-    return list.map(obj => obj.columnSpan * obj.rowSpan).reduce((x, current) => x + current);
+    return filledByGrid;
 
     //return list.reduce((obj, count) => {
     //    return count + Number(obj.columnSpan) * Number(obj.rowSpan);
