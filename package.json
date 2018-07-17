@@ -20,8 +20,6 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.2",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-requirejs": "^1.1.0",
     "karma-webpack": "^3.0.0",
     "node-sass": "^4.9.2",
     "phantomjs": "^2.1.7",
@@ -36,7 +34,6 @@
   },
   "scripts": {
     "test": "karma start ./karma.conf.js",
-    "test-phantom": "karma start ./karma.conf.js --browsers PhantomJS",
     "test-chrome": "karma start ./karma.conf.js --browsers Chrome",
     "build": "webpack",
     "serve": "webpack --watch",
