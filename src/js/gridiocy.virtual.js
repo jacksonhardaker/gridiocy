@@ -258,32 +258,6 @@ function renderChanges() {
     });
 }
 
-function updateDataAtributes(obj) {
-    if (obj) {
-        let element = document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0];
-
-        element.dataset.columnSpan = obj.columnSpan;
-        element.dataset.rowSpan = obj.rowSpan;
-        element.dataset.columnPosition = obj.column;
-        element.dataset.rowPosition = obj.row;
-    }
-    else {
-        list.forEach(item => {
-            updateDataAtributes(item);
-        })
-    }
-}
-
-function generateFilledByGrid() {
-    let filledByGrid = new Array(list.map(obj => obj.columnSpan * obj.rowSpan).reduce((x, current) => x + current));
-
-    return filledByGrid;
-
-    //return list.reduce((obj, count) => {
-    //    return count + Number(obj.columnSpan) * Number(obj.rowSpan);
-    //}, 0);
-}
-
 /** Private Functions */
 
 function calculateRowMajorOrder(obj) {
