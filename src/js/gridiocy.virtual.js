@@ -16,7 +16,11 @@ function init(maxColumns) {
 /**
  * Adds an object to the list
  *
- * @param {*} obj
+ * @param {String} id
+ * @param {Number} row
+ * @param {Number} column
+ * @param {Number} rowSpan
+ * @param {Number} columnSpan
  */
 function add(id, row, column, rowSpan, columnSpan) {
     list.push({
@@ -47,31 +51,57 @@ function rowMajorSort() {
     return getList();
 }
 
+/**
+ * Gets an immutable copy of the grid list
+ *
+ * @returns {Array}
+ */
 function getList() {
     return [...list.map(obj => { return Object.assign({}, obj); })];
 }
 
+/**
+ * Gets an immutable copy of the grid item with the given id
+ *
+ * @param {String} id
+ * @returns {Object}
+ */
 function get(id) {
     return Object.assign({}, list[indexOf(id)]);
 }
 
 function setRowPosition(id, pos) {
-    let index = indexOf(id);
-
-    list[index].row = pos;
-    //updateDataAtributes(list[index]);
+    // console.log(`Setting Row Position of [${id}] to ${pos}.`);
+    list[indexOf(id)].row = pos;
 
     return pos;
 }
 
 function setColumnPosition(id, pos) {
     // console.log(`Setting Column Position of [${id}] to ${pos}.`);
-    let index = indexOf(id);
-
-    list[index].column = pos;
-    //updateDataAtributes(list[index]);
+    list[indexOf(id)].column = pos;
 
     return pos;
+}
+
+function setRowSpan(id, span) {
+    // console.log(`Setting Row Span of [${id}] to ${span}.`);
+    let index = indexOf(id);
+
+    list[index].rowSpan = span;
+    updateDataAtributes(list[index]);
+
+    return span;
+}
+
+function setColumnSpan(id, span) {
+    // console.log(`Setting Column Span of [${id}] to ${span}.`);
+    let index = indexOf(id);
+
+    list[index].columnSpan = span;
+    updateDataAtributes(list[index]);
+
+    return span;
 }
 
 function swapColumnPositions(a, b) {
@@ -91,25 +121,6 @@ function swapRowPositions(a, b) {
     setRowPosition(bObj.id, aObj.row);
 }
 
-function setRowSpan(id, span) {
-    let index = indexOf(id);
-
-    list[index].rowSpan = span;
-    updateDataAtributes(list[index]);
-
-
-    return span;
-}
-
-function setColumnSpan(id, span) {
-    let index = indexOf(id);
-
-    list[index].columnSpan = span;
-    updateDataAtributes(list[index]);
-
-    return span;
-}
-
 function shiftUp(id) {
     let obj = get(id);
 
@@ -118,13 +129,6 @@ function shiftUp(id) {
 
         resolveConflicts(obj, DRAG_DIRECTION.UP);
     }
-
-    // let index = indexOf(id);
-
-    // if (index - 1 >= 0) {
-    //     move(index, index - 3);
-    //     renderChangedOrder();
-    // }
 }
 
 function shiftDown(id) {
@@ -132,13 +136,6 @@ function shiftDown(id) {
 
     obj.row++;
     resolveConflicts(obj, DRAG_DIRECTION.DOWN);
-
-    // let index = indexOf(id);
-
-    // if (index + 1 < list.length) {
-    //     move(index, index + 3);
-    //     renderChangedOrder();
-    // }
 }
 
 function shiftRight(id) {
@@ -153,19 +150,7 @@ function shiftRight(id) {
 
         resolveConflicts(obj, DRAG_DIRECTION.RIGHT);
         //rowMajorSort();
-        //    console.log(getList());
-        //document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0].style.gridArea = `${obj.row} / ${columnPos} / span ${obj.rowSpan} / span ${obj.columnSpan}`;
-        //renderChanges();
     }
-
-    // Sort list based on new
-
-    // let index = indexOf(id);
-
-    // if (index + 1 < list.length) {
-    //     move(index, index + 1);
-    //     renderChangedOrder();
-    // }
 }
 
 function shiftLeft(id) {
@@ -176,14 +161,9 @@ function shiftLeft(id) {
 
         resolveConflicts(obj, DRAG_DIRECTION.LEFT);
     }
-
-    // let index = indexOf(id);
-
-    // if (index - 1 >= 0) {
-    //     move(index, index - 1);
-    //     renderChangedOrder();
-    // }
 }
+
+/** Private Functions */
 
 function resolveConflicts(obj, direction) {
     getList().forEach(conflicting => {
@@ -244,21 +224,6 @@ function move(fromIndex, toIndex) {
 function indexOf(id) {
     return list.map(obj => { return obj.id }).indexOf(id);
 }
-
-function renderChangedOrder() {
-    list.forEach((obj, index) => {
-        document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0].style.order = index;
-    });
-}
-
-function renderChanges() {
-    list.forEach((obj, index) => {
-        //document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0].style.order = index;
-        document.getElementsByClassName(`gridiocy-item-${obj.id}`)[0].style.gridArea = `${obj.row} / ${obj.column} / span ${obj.rowSpan} / span ${obj.columnSpan}`;
-    });
-}
-
-/** Private Functions */
 
 function calculateRowMajorOrder(obj) {
     let zeroBasedRowPosition = Number(obj.row) - 1;
