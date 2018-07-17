@@ -5,8 +5,6 @@ import virtualGrid from './gridiocy.virtual.js';
 import uniqid from '../../node_modules/uniqid/index.js';
 const gridiocy = {};
 
-console.log(virtualGrid);
-
 let options;
 let gridiocyGrid;
 
@@ -30,12 +28,18 @@ gridiocy.initialize = function (indentifier, opt) {
         // Wrap inner HTML with content wrapper
         item.innerHTML = `<div class="gridiocy-item-content">${item.innerHTML}</div>`;
 
-        item.style.gridArea = 'auto / auto / span 1/ span 1';
+        // Add default styles and data attributes
+        let columnPos = index % options.columns + 1;
+        let rowPos = Math.ceil((index + 1) / options.columns);
+
+        item.style.gridArea = `${rowPos} / ${columnPos} / span 1 / span 1`;
+        //item.style.gridArea = 'auto / auto / span 1 / span 1';
         item.style.order = index;
-        setAttributes(item, { 'data-grid-id': indentifier, 'data-column-span': 1, 'data-row-span': 1 });
+        setAttributes(item, { 'data-grid-id': indentifier, 'data-column-span': 1, 'data-row-span': 1, 'data-column-position': columnPos, 'data-row-position': rowPos });
 
         // Initiate virtual grid.
-        virtualGrid.add(indentifier, 1, 1);
+        virtualGrid.init(options.columns);
+        virtualGrid.add(indentifier, rowPos, columnPos, 1, 1);
     });
 
     // If resizable
