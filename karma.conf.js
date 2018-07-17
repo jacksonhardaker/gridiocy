@@ -1,4 +1,7 @@
-var webpackConfig = require('./webpack.config.js');
+let webpackConfig = require('./webpack.config.js');
+// webpackConfig.entry = {};
+
+// const path = require('path');
 
 // Karma configuration
 // Generated on Mon Jul 16 2018 21:59:06 GMT-0400 (Eastern Daylight Time)
@@ -12,18 +15,13 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'requirejs'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      { pattern: '"./src/js/*.spec.js"', included: false },
-      { pattern: '"src/js/*.spec.js"', included: false },
-      { pattern: '"test/js/*.js"', included: false },
-      { pattern: '/test/js/*.spec.js', included: false },
-      { pattern: '/test/js/*.spec.j', included: false },
-      { pattern: '/test/js/*', included: false },
-      { pattern: '"./test/js/*"', included: false }
+      'test/test.index.js'
+      //'test/js/*.spec.js'
     ],
 
 
@@ -35,15 +33,34 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/**/*.spec.js': ['webpack'],
-      'test/**/*.spec.jsx': ['webpack']
+      'test/test.index.js': ['webpack'],
+      // 'src/**/*.js': ['webpack'],
+      // 'test/**/*.spec.js': ['webpack']
     },
+
+    webpack: webpackConfig,
+
+    // webpack: {
+    //   mode: 'development',
+    //   output: {
+    //     path: path.resolve(__dirname, 'dst')
+    //   },
+    //   module: {
+    //     rules: [
+    //       {
+    //         test: /\.js$/,
+    //         exclude: /node_modules/,
+    //         loader: 'babel-loader'
+    //       }
+    //     ]
+    //   }
+    // },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['mocha'],
 
 
     // web server port
@@ -60,7 +77,7 @@ module.exports = function (config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // start these browsers
@@ -71,7 +88,7 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
